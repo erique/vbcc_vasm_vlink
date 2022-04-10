@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# wget http://phoenix.owl.de/tags/vbcc0_9g.tar.gz
+# wget http://phoenix.owl.de/vbcc/2019-10-04/vbcc_target_m68k-amigaos.lha
+# wget http://sun.hasenbraten.de/vlink/release/vlink.tar.gz
+# wget http://sun.hasenbraten.de/vasm/release/vasm.tar.gz
+
 # we need tar, 7z, patch, gcc, vamos ...
 
 set -e
