@@ -56,6 +56,14 @@ cd vlink && make -j 4 && cd -
 echo -e "\033[1;33m****** VBCC ******\033[0m"
 cd vbcc && make TARGET=m68k -j 4 && cd -
 
+echo -e "\033[1;33m****** CREATE OUTPUT ******\033[0m"
+find vasm  -type f -executable -exec cp {} vbcc/bin \;
+find vlink -type f -executable -exec cp {} vbcc/bin \;
+mkdir -p build/vbcc
+cp -r vbcc/bin     build/vbcc
+cp -r vbcc/config  build/vbcc
+cp -r vbcc/targets build/vbcc
+
 cat > hello.c << EOF
 #include <stdio.h>
 
@@ -67,10 +75,11 @@ int main(int argc, const char** argv)
 EOF
 
 echo -e "\033[1;33m****** COMPILE ******\033[0m"
-VBCC=$PWD/vbcc PATH=$PATH:$PWD/vbcc/bin:$PWD/vasm:$PWD/vlink vc +aos68k -vv hello.c -o hello
+VBCC=$PWD/build/vbcc PATH=$PATH:$VBCC/bin vc +aos68k -vv hello.c -o hello
 
 echo -e "\033[1;33m****** RUN ******\033[0m"
-vamos hello world
+file hello
+type vamos > /dev/null && vamos hello world
 
 echo -e "\033[1;33m****** CLEANUP ******\033[0m"
 rm -rf vasm vlink vbcc vbcc_target_m68k-amigaos hello.c hello
