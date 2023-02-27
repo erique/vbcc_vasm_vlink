@@ -13,6 +13,7 @@ echo -e "\033[1;33m****** UNPACK ******\033[0m"
 tar xvzf vasm.tar.gz
 tar xvzf vlink.tar.gz
 tar xvzf vbcc.tar.gz
+tar xvzf vbcc_unix_config.tar.gz -C vbcc
 
 7z x vbcc_target_m68k-amigaos.lha vbcc_target_m68k-amigaos/targets
 mv vbcc_target_m68k-amigaos/targets vbcc
@@ -45,24 +46,6 @@ diff -rupN vbcc/datatypes/dtgen.c vbcc.patch/datatypes/dtgen.c
 EOF
 
 mkdir -p vbcc/bin
-mkdir -p vbcc/config
-
-cat > vbcc/config/vc.config << EOF
--cc=vbccm68k -quiet -hunkdebug %s -o= %s %s -O=%ld -I\$VBCC/targets/m68k-amigaos/include/
--ccv=vbccm68k -hunkdebug %s -o= %s %s -O=%ld -I\$VBCC/targets/m68k-amigaos/include/
--as=vasmm68k_mot -quiet -Fhunk -nowarn=62 %s -o %s
--asv=vasmm68k_mot -Fhunk -nowarn=62 %s -o %s
--rm=rm %s
--rmv=rm %s
--ld=vlink -bamigahunk -x -Bstatic -Cvbcc -nostdlib -mrel \$VBCC/targets/m68k-amigaos/lib/startup.o %s %s -L\$VBCC/targets/m68k-amigaos/lib/ -lvc -lamiga -o %s
--l2=vlink -bamigahunk -x -Bstatic -Cvbcc -nostdlib -mrel %s %s -L\$VBCC/targets/m68k-amigaos/lib/ -o %s
--ldv=vlink -bamigahunk -t -x -Bstatic -Cvbcc -nostdlib -mrel \$VBCC/targets/m68k-amigaos/lib/startup.o %s %s -L\$VBCC/targets/m68k-amigaos/lib/ -lvc -o %s
--l2v=vlink -bamigahunk -t -x -Bstatic -Cvbcc -nostdlib -mrel %s %s -L\$VBCC/targets/m68k-amigaos/lib/ -o %s
--ldnodb=-s -Rshort
--ul=-l%s
--cf=-F%s
--ml=500
-EOF
 
 echo -e "\033[1;33m****** VASM ******\033[0m"
 cd vasm && make CPU=m68k SYNTAX=mot -j 4 && cd -
@@ -84,7 +67,7 @@ int main(int argc, const char** argv)
 EOF
 
 echo -e "\033[1;33m****** COMPILE ******\033[0m"
-VBCC=$PWD/vbcc PATH=$PATH:$PWD/vbcc/bin:$PWD/vasm:$PWD/vlink vc -vv hello.c -o hello
+VBCC=$PWD/vbcc PATH=$PATH:$PWD/vbcc/bin:$PWD/vasm:$PWD/vlink vc +aos68k -vv hello.c -o hello
 
 echo -e "\033[1;33m****** RUN ******\033[0m"
 vamos hello world
