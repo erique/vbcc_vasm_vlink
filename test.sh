@@ -54,7 +54,8 @@ echo -e "\033[1;33m****** VLINK ******\033[0m"
 cd vlink && make -j 4 && cd -
 
 echo -e "\033[1;33m****** VBCC ******\033[0m"
-cd vbcc && make TARGET=m68k -j 4 && cd -
+[[ "$OSTYPE" == "msys"* ]] && numcpu="1" || numcpu="4"
+cd vbcc && make TARGET=m68k -j ${numcpu} && cd -
 
 echo -e "\033[1;33m****** CREATE OUTPUT ******\033[0m"
 [[ "$OSTYPE" == "darwin"* ]] && executable="+111" || executable="/111"
@@ -64,6 +65,10 @@ mkdir -p build/vbcc
 cp -r vbcc/bin     build/vbcc
 cp -r vbcc/config  build/vbcc
 cp -r vbcc/targets build/vbcc
+
+if [[ "$OSTYPE" == "msys"* ]]; then
+    sed -ie 's/$VBCC/%VBCC%/g' build/vbcc/config/*
+fi
 
 cat > hello.c << EOF
 #include <stdio.h>
