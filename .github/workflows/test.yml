@@ -1,0 +1,14 @@
+name: test
+
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: run test.sh
+      run: ./test.sh
+      shell: bash
