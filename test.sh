@@ -19,6 +19,10 @@ tar xvzf vbcc_unix_config.tar.gz -C vbcc
 mv vbcc_target_m68k-amigaos/targets vbcc
 rm -r vbcc_target_m68k-amigaos
 
+7z x vbcc_target_m68k-kick13.lha vbcc_target_m68k-kick13/targets
+mv vbcc_target_m68k-kick13/targets/m68k-kick13 vbcc/targets/m68k-kick13
+rm -r vbcc_target_m68k-kick13
+
 patch -p 0 << EOF
 diff -rupN vbcc/datatypes/dtgen.c vbcc.patch/datatypes/dtgen.c
 --- vbcc/datatypes/dtgen.c	2013-04-24 00:45:50 +0200
@@ -84,6 +88,13 @@ echo -e "\033[1;33m****** COMPILE ******\033[0m"
 VBCC=$PWD/build/vbcc PATH=$VBCC/bin:$PATH vc +aos68k -vv hello.c -o hello
 
 echo -e "\033[1;33m****** RUN ******\033[0m"
+file hello
+type vamos > /dev/null && vamos hello world
+
+echo -e "\033[1;33m****** COMPILE (1.3) ******\033[0m"
+VBCC=$PWD/build/vbcc PATH=$VBCC/bin:$PATH vc +kick13 -vv hello.c -o hello
+
+echo -e "\033[1;33m****** RUN (1.3) ******\033[0m"
 file hello
 type vamos > /dev/null && vamos hello world
 
